@@ -24,9 +24,17 @@ public class storeNewPersonListener implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
         
-        /*Persona newEntry = new Persona(ref.getUserInputs().get("")
+        Persona newEntry = new Persona(
+                ref.getUserInputs().get("Firstname").getText(),
+                ref.getUserInputs().get("Lastname").getText(),
+                ref.getUserInputs().get("Address").getText(),
+                ref.getUserInputs().get("City").getText(),
+                ref.getUserInputs().get("State").getText(),
+                ref.getUserInputs().get("Zip code").getText(),
+                ref.getUserInputs().get("Phone").getText()
+        );
         
-                                        );*/
+        mainWindow.getInstance().updateDb(newEntry);
         
         System.out.println("hai inserito una persona ");
         

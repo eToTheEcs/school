@@ -25,15 +25,13 @@ import javax.swing.JTextArea;
  */
 public class addPersonWindow extends JFrame {
     
-    private Map<String, JTextArea> userInputs = new HashMap<String, JTextArea>();
-    
-    //private Map<String, JLabel> windowLabels = new HashMap<String, JLabel>();
-    
+    protected Map<String, JTextArea> userInputs = new HashMap<String, JTextArea>();
+        
     private ArrayList<JLabel> windowLabels = new ArrayList<JLabel>();
     
     JButton ok, cancel;
     
-    public addPersonWindow() {
+    public addPersonWindow(boolean isEditable) {
         
         int i;
         
@@ -47,16 +45,13 @@ public class addPersonWindow extends JFrame {
         this.userInputs.put("Zip code", new JTextArea());
         this.userInputs.put("Phone", new JTextArea());
         
+        /*if(isEditable) {
+            
+            for(i = 0; i < this.userInputs.)
+        }*/
+        
         for(Map.Entry<String, JTextArea> el : this.userInputs.entrySet())
             el.getValue().setPreferredSize(new Dimension(150, 20));
-        
-        /*this.windowLabels.put("FirstName", new JLabel("FirstName"));
-        this.windowLabels.put("LastName", new JLabel("LastName"));
-        this.windowLabels.put("Address", new JLabel("Address"));
-        this.windowLabels.put("City", new JLabel("City"));
-        this.windowLabels.put("State", new JLabel("State"));
-        this.windowLabels.put("Zip code", new JLabel("Zip code"));
-        this.windowLabels.put("Phone", new JLabel("Phone"));*/
         
         this.windowLabels.add(new JLabel("Firstname"));
         this.windowLabels.add(new JLabel("Lastname"));

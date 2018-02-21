@@ -26,7 +26,7 @@ public class addPersonListener implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         
         System.out.println("hai scelto \" " + ((JButton)ae.getSource()).getText() + "\" ");
-        JFrame popup = new addPersonWindow();   // ereditarietà...
+        JFrame popup = new addPersonWindow(true);   // ereditarietà...
         popup.pack();
         popup.setLocationRelativeTo(null);
         popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

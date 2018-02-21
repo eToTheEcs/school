@@ -25,7 +25,7 @@ public class Rubrica {
         }
         catch(Exception e) {}
         
-        mainWindow win = new mainWindow();
+        mainWindow win = mainWindow.getInstance();
         
         win.pack();
         win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

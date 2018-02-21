@@ -20,15 +20,20 @@ import javax.swing.*;
  */
 public class mainWindow extends JFrame{
     
+    private static mainWindow instance = null;
+    
     private Map<String, JButton> buttons = new HashMap<>();   
     
-    private JList contactList;
+    private JList contactList = null;
     
     private DefaultListModel dlm = new DefaultListModel();
     
     private JScrollPane listScroller = null;
     
-    public mainWindow() {
+    // people "database"
+    private Map<String, Persona> database = new HashMap<>();
+    
+    private mainWindow() {
         
         GridBagConstraints c = new GridBagConstraints();
         
@@ -92,4 +97,27 @@ public class mainWindow extends JFrame{
         this.add(mainPanel);
     }
     
+    public static mainWindow getInstance() {
+        
+        if(instance == null) {
+            
+            mainWindow.instance = new mainWindow();
+        }
+        
+        return mainWindow.instance;
+    }
+    
+    public void updateDb(Persona newEntry) {
+        
+        this.database.put(newEntry.getFirstname(), newEntry);
+        
+        this.insertPerson(newEntry.getFirstname());
+    }
+    
+    private void insertPerson(String toadd) {
+        
+        this.dlm.addElement(toadd);
+        
+        
+    }
 }
