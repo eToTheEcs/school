@@ -7,36 +7,44 @@ package rubrica;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 /**
  *
  * @author Nicolas Benatti
  */
-public class storeNewPersonListener implements ActionListener{
+public class storeNewPersonListener implements ActionListener {
 
     private addPersonWindow ref;
     
-    public storeNewPersonListener(addPersonWindow _ref) {
+    private boolean isUsedToUpdate = false;
+    
+    public storeNewPersonListener(addPersonWindow _ref, boolean usedToUpdate) {
         
         this.ref = _ref;
+        this.isUsedToUpdate = usedToUpdate;
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
         
         Persona newEntry = new Persona(
-                ref.getUserInputs().get("Firstname").getText(),
-                ref.getUserInputs().get("Lastname").getText(),
-                ref.getUserInputs().get("Address").getText(),
-                ref.getUserInputs().get("City").getText(),
-                ref.getUserInputs().get("State").getText(),
-                ref.getUserInputs().get("Zip code").getText(),
-                ref.getUserInputs().get("Phone").getText()
+                ref.getUserInputs().get("Firstname").getText().trim(),
+                ref.getUserInputs().get("Lastname").getText().trim(),
+                ref.getUserInputs().get("Address").getText().trim(),
+                ref.getUserInputs().get("City").getText().trim(),
+                ref.getUserInputs().get("State").getText().trim(),
+                ref.getUserInputs().get("Zip code").getText().trim(),
+                ref.getUserInputs().get("Phone").getText().trim()
         );
         
-        mainWindow.getInstance().updateDb(newEntry);
+        if(!this.isUsedToUpdate)
+            mainWindow.getInstance().insertInDB(newEntry);
+        else {
+            int selectedIndex = mainWindow.getInstance().getList().getSelectedIndex();
+            mainWindow.getInstance().updateDB((String)mainWindow.getInstance().getList().getSelectedValue(), newEntry, selectedIndex);
+        }
         
-        System.out.println("hai inserito una persona ");
-        
+        this.ref.dispatchEvent(new WindowEvent(this.ref, WindowEvent.WINDOW_CLOSING));
     }
 }

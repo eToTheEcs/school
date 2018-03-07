@@ -7,19 +7,24 @@ package rubrica;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Nicolas Benatti
  */
-public class addPersonListener implements ActionListener {
-    
+public class editPersonListener implements ActionListener{
+
     @Override
     public void actionPerformed(ActionEvent ae) {
+
+        if(mainWindow.getInstance().getList().getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(mainWindow.getInstance(), "you haven't selected a person to edit", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
                 
-        JFrame popup = new addPersonWindow(true);   // ereditarietà...
+        editPersonWindow popup = new editPersonWindow();
         
         popup.pack();
         popup.setLocationRelativeTo(null);

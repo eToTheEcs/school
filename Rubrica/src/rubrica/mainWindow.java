@@ -15,19 +15,15 @@ import java.util.Map;
 import javax.swing.*;
 
 /**
- *
+ * this class makes use of singleton design pattern
  * @author Nicolas Benatti
  */
 public class mainWindow extends JFrame{
     
     private static mainWindow instance = null;
-    
-    private Map<String, JButton> buttons = new HashMap<>();   
-    
+    private Map<String, JButton> buttons = new HashMap<>();
     private JList contactList = null;
-    
-    private DefaultListModel dlm = new DefaultListModel();
-    
+    private ListModel dlm = new DefaultListModel();
     private JScrollPane listScroller = null;
     
     // people "database"
@@ -43,9 +39,6 @@ public class mainWindow extends JFrame{
         buttons.put("Sort by name", new JButton("Sort by name"));
         buttons.put("Sort by ZIP", new JButton("Sort by ZIP"));
         
-        // aggiungo i listener necessari
-        this.buttons.get("Add").addActionListener( new addPersonListener() );
-        
         // settaggio della lista contatti
         this.contactList = new JList(this.dlm);
         this.contactList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -54,6 +47,11 @@ public class mainWindow extends JFrame{
         this.listScroller = new JScrollPane(this.contactList);
         this.listScroller.setPreferredSize(new Dimension(300, 100));
         
+        // aggiungo i listener necessari
+        this.buttons.get("Add").addActionListener( new addPersonListener() );
+        this.contactList.addMouseListener(new showPersonListener(this));
+        this.buttons.get("Edit").addActionListener( new editPersonListener() );
+        this.buttons.get("Sort by ZIP").addActionListener(new sortListener());
         
         this.contactList.setPreferredSize(new Dimension(300, 100));
         
@@ -107,17 +105,64 @@ public class mainWindow extends JFrame{
         return mainWindow.instance;
     }
     
-    public void updateDb(Persona newEntry) {
+    public JList getList() {
         
-        this.database.put(newEntry.getFirstname(), newEntry);
+        return this.contactList;
+    }
+    
+    public DefaultListModel getDlm() {
         
-        this.insertPerson(newEntry.getFirstname());
+        return (DefaultListModel)this.dlm;
+    }
+    
+    public Persona queryDB(String key) {
+        
+        return this.database.get(key);
+    }
+    
+    public void insertInDB(Persona newEntry) {
+        
+        // advise that the list is no longer sorted
+        sortListener.hasBeenSorted = false;
+        
+        //NOTE: using 2 concatenated strings as the "unique" ID could be quite heavy..consider switching to integer IDs
+        this.database.put(newEntry.getFirstname() + " " + newEntry.getLastname(), newEntry);   
+        this.insertPerson(newEntry.getFirstname() + " " + newEntry.getLastname());
+    }
+    
+    public void updateDB(String entryName, Persona newEntry, int listIndex) {
+        
+        Persona affectedRecord = this.database.get(entryName);
+        
+        System.out.println("id : " + entryName);
+        System.out.println("person key: " + newEntry.getFirstname());
+        
+        // if name didn't change, there's no need to refresh screen
+        Boolean[] hasNameChanged = new Boolean[2];  hasNameChanged[1] = hasNameChanged[0] = false;
+        
+        Persona diffResult = affectedRecord.compareDiff(newEntry, hasNameChanged);
+        
+        System.out.println("OLD RECORD DATA: \n" + affectedRecord);
+        System.out.println("NEW RECORD DATA: \n" + newEntry);
+        System.out.println("RESULT RECORD: \n" + diffResult);
+               
+        // update the record
+        this.database.put(diffResult.getFirstname()+" "+diffResult.getLastname(), database.remove(entryName));
+        
+        if(hasNameChanged[1])
+            refreshList(diffResult.getFirstname()+" "+diffResult.getLastname(), listIndex);
+    }
+    
+    // refresh values in the list, after updateDB operation
+    private void refreshList(String newVal, int index) {
+        ((DefaultListModel)this.dlm).setElementAt(newVal, index);
+    }
+    
+    public void refreshEntireList() {
+        
     }
     
     private void insertPerson(String toadd) {
-        
-        this.dlm.addElement(toadd);
-        
-        
+        ((DefaultListModel)this.dlm).addElement(toadd);
     }
 }

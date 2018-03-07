@@ -5,19 +5,39 @@
  */
 package rubrica;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//TODO: mostrare descrizione persona compilata
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  *
  * @author Nicolas Benatti
  */
-public class showPersonListener implements ActionListener {
+public class showPersonListener extends MouseAdapter {
+    
+    private mainWindow ref = null;
+    
+    public showPersonListener (mainWindow _ref) {
+        
+        this.ref = _ref;
+    }
     
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void mouseClicked(MouseEvent me) {
         
-        
-        
+        if(me.getClickCount() == 2) {
+            
+            addPersonWindow tmp = new addPersonWindow(false);
+            tmp.showcaseMode(true);
+
+            JFrame popup = tmp;
+            popup.pack();
+            popup.setLocationRelativeTo(null);
+            popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            popup.setVisible(true);
+        }
     }
 }

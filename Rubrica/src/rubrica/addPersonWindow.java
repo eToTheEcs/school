@@ -9,6 +9,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +30,13 @@ public class addPersonWindow extends JFrame {
     
     protected Map<String, JTextArea> userInputs = new HashMap<String, JTextArea>();
         
-    private ArrayList<JLabel> windowLabels = new ArrayList<JLabel>();
+    protected ArrayList<JLabel> windowLabels = new ArrayList<JLabel>();
     
-    JButton ok, cancel;
+    protected JButton ok, cancel;
+    
+    protected boolean isInShowcaseMode = false;
+    
+    protected ActionListener al;
     
     public addPersonWindow(boolean isEditable) {
         
@@ -45,10 +52,7 @@ public class addPersonWindow extends JFrame {
         this.userInputs.put("Zip code", new JTextArea());
         this.userInputs.put("Phone", new JTextArea());
         
-        /*if(isEditable) {
-            
-            for(i = 0; i < this.userInputs.)
-        }*/
+        System.out.println(userInputs.size());
         
         for(Map.Entry<String, JTextArea> el : this.userInputs.entrySet())
             el.getValue().setPreferredSize(new Dimension(150, 20));
@@ -61,6 +65,13 @@ public class addPersonWindow extends JFrame {
         this.windowLabels.add(new JLabel("Zip code"));
         this.windowLabels.add(new JLabel("Phone"));
         
+         if(!isEditable) {
+            
+            for(i = 0; i < this.userInputs.size(); i++) {
+                this.userInputs.get(this.windowLabels.get(i).getText()).setEditable(false);
+            }
+        }
+        
         for(JLabel runner : this.windowLabels) {
             
             runner.setPreferredSize(new Dimension(150, 20));
@@ -68,7 +79,8 @@ public class addPersonWindow extends JFrame {
         
         this.ok = new JButton("Ok");
         this.ok.setPreferredSize(new Dimension(40, 20));
-        this.ok.addActionListener(new storeNewPersonListener(this));
+        this.al = new storeNewPersonListener(this, false);
+        this.ok.addActionListener(this.al);
         
         this.cancel = new JButton("Cancel");
         this.ok.setPreferredSize(new Dimension(40, 20));
@@ -112,5 +124,23 @@ public class addPersonWindow extends JFrame {
     Map<String, JTextArea> getUserInputs() {
         
         return this.userInputs;
+    }
+    
+    public void showcaseMode(boolean toggle) {
+        
+        int i;
+        
+        if(toggle && !isInShowcaseMode) {
+            System.out.println("showcasing...");
+            String selected = (String)mainWindow.getInstance().getList().getSelectedValue();
+            Persona toShowCase = mainWindow.getInstance().queryDB(selected);
+            
+            toShowCase.fillShowCaseArray(userInputs);
+        }
+        else if(!toggle && isInShowcaseMode) {
+            
+            for(Map.Entry<String, JTextArea> el : this.userInputs.entrySet())
+                el.getValue().setText("");
+        }
     }
 }
