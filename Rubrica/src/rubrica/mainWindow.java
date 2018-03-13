@@ -10,23 +10,30 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.*;
 
 /**
- * this class makes use of singleton design pattern
+ * this class uses singleton design pattern
  * @author Nicolas Benatti
  */
-public class mainWindow extends JFrame{
+public class mainWindow extends JFrame implements ActionListener {
     
     private static mainWindow instance = null;
+    
     private Map<String, JButton> buttons = new HashMap<>();
     private JList contactList = null;
     private ListModel dlm = new DefaultListModel();
     private JScrollPane listScroller = null;
+    private boolean hasBeenSorted = false; 
     
-    // people "database"
+// people "database"
     private Map<String, Persona> database = new HashMap<>();
     
     private mainWindow() {
@@ -51,7 +58,7 @@ public class mainWindow extends JFrame{
         this.buttons.get("Add").addActionListener( new addPersonListener() );
         this.contactList.addMouseListener(new showPersonListener(this));
         this.buttons.get("Edit").addActionListener( new editPersonListener() );
-        this.buttons.get("Sort by ZIP").addActionListener(new sortListener());
+        this.buttons.get("Sort by ZIP").addActionListener(this);
         
         this.contactList.setPreferredSize(new Dimension(300, 100));
         
@@ -105,14 +112,14 @@ public class mainWindow extends JFrame{
         return mainWindow.instance;
     }
     
-    public JList getList() {
+    public String getSelectedRecord() {
         
-        return this.contactList;
+        return (String)this.contactList.getSelectedValue();
     }
     
-    public DefaultListModel getDlm() {
+    public int getSelectedRecordIndex() {
         
-        return (DefaultListModel)this.dlm;
+        return this.contactList.getSelectedIndex();
     }
     
     public Persona queryDB(String key) {
@@ -123,7 +130,7 @@ public class mainWindow extends JFrame{
     public void insertInDB(Persona newEntry) {
         
         // advise that the list is no longer sorted
-        sortListener.hasBeenSorted = false;
+        hasBeenSorted = false;
         
         //NOTE: using 2 concatenated strings as the "unique" ID could be quite heavy..consider switching to integer IDs
         this.database.put(newEntry.getFirstname() + " " + newEntry.getLastname(), newEntry);   
@@ -134,20 +141,20 @@ public class mainWindow extends JFrame{
         
         Persona affectedRecord = this.database.get(entryName);
         
-        System.out.println("id : " + entryName);
-        System.out.println("person key: " + newEntry.getFirstname());
-        
         // if name didn't change, there's no need to refresh screen
         Boolean[] hasNameChanged = new Boolean[2];  hasNameChanged[1] = hasNameChanged[0] = false;
         
         Persona diffResult = affectedRecord.compareDiff(newEntry, hasNameChanged);
+         
+        System.out.println("OLD RECORD: " + affectedRecord);
+        System.out.println("NEW RECORD: " + newEntry);
+        System.out.println("UNION: " + diffResult);
         
-        System.out.println("OLD RECORD DATA: \n" + affectedRecord);
-        System.out.println("NEW RECORD DATA: \n" + newEntry);
-        System.out.println("RESULT RECORD: \n" + diffResult);
-               
         // update the record
-        this.database.put(diffResult.getFirstname()+" "+diffResult.getLastname(), database.remove(entryName));
+        this.database.remove(entryName);
+        this.database.put(diffResult.getFirstname()+" "+diffResult.getLastname(), diffResult);
+        
+        System.out.println("db value for key: " + diffResult.getFirstname()+" "+diffResult.getLastname() + ": " + this.database.get(diffResult.getFirstname()+" "+diffResult.getLastname()));
         
         if(hasNameChanged[1])
             refreshList(diffResult.getFirstname()+" "+diffResult.getLastname(), listIndex);
@@ -157,12 +164,28 @@ public class mainWindow extends JFrame{
     private void refreshList(String newVal, int index) {
         ((DefaultListModel)this.dlm).setElementAt(newVal, index);
     }
-    
-    public void refreshEntireList() {
-        
-    }
-    
+ 
     private void insertPerson(String toadd) {
         ((DefaultListModel)this.dlm).addElement(toadd);
     }
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        
+        if(!hasBeenSorted) {
+            Collection prv = Collections.list( ((DefaultListModel)dlm).elements() );
+            Collections.sort((List<Persona>)prv);
+            
+            
+            // ugly way :-(
+            ((DefaultListModel<String>)dlm).clear();
+            
+            for(Object runner : prv)
+                ((DefaultListModel)dlm).addElement(runner);
+            
+            System.out.println("list sorted");
+            hasBeenSorted = true;
+        }
+    }
+    
 }

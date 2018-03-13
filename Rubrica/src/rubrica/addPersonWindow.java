@@ -104,7 +104,6 @@ public class addPersonWindow extends JFrame {
         c.gridx = 3;
         for(i = 0; i < this.userInputs.size(); ++i) {
             c.gridy = i;
-            
             mainPanel.add(this.userInputs.get(this.windowLabels.get(i).getText()), c);
         }
         
@@ -132,7 +131,10 @@ public class addPersonWindow extends JFrame {
         
         if(toggle && !isInShowcaseMode) {
             System.out.println("showcasing...");
-            String selected = (String)mainWindow.getInstance().getList().getSelectedValue();
+            ok.setVisible(false);
+            cancel.setVisible(false);
+            
+            String selected = (String)mainWindow.getInstance().getSelectedRecord();
             Persona toShowCase = mainWindow.getInstance().queryDB(selected);
             
             toShowCase.fillShowCaseArray(userInputs);

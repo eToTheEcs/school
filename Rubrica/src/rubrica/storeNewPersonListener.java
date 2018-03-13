@@ -39,10 +39,10 @@ public class storeNewPersonListener implements ActionListener {
         );
         
         if(!this.isUsedToUpdate)
-            mainWindow.getInstance().insertInDB(newEntry);
+            mainWindow.getInstance().insertInDB(newEntry);  // add new person to db
         else {
-            int selectedIndex = mainWindow.getInstance().getList().getSelectedIndex();
-            mainWindow.getInstance().updateDB((String)mainWindow.getInstance().getList().getSelectedValue(), newEntry, selectedIndex);
+            int selectedIndex = mainWindow.getInstance().getSelectedRecordIndex();
+            mainWindow.getInstance().updateDB((String)mainWindow.getInstance().getSelectedRecord(), newEntry, selectedIndex);   // update record in db
         }
         
         this.ref.dispatchEvent(new WindowEvent(this.ref, WindowEvent.WINDOW_CLOSING));

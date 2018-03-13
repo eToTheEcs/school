@@ -19,7 +19,7 @@ public class editPersonListener implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        if(mainWindow.getInstance().getList().getSelectedValue() == null) {
+        if(mainWindow.getInstance().getSelectedRecord() == null) {
             JOptionPane.showMessageDialog(mainWindow.getInstance(), "you haven't selected a person to edit", "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
