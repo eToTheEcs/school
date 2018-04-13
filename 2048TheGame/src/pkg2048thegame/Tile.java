@@ -15,7 +15,7 @@ public class Tile {
     
     private int w, h, anchorx, anchory, number;
     
-    Color color;
+    //Color color;
     
     public Tile(int _h, int _w, int _anchorx, int _anchory, Color _c) {
         
@@ -23,7 +23,7 @@ public class Tile {
         w = _w;
         anchorx = _anchorx;
         anchory = _anchory;
-        color = _c;
+        //color = _c;
         number = 0; // 0 => do not display the number on screen
     }
     
@@ -32,7 +32,7 @@ public class Tile {
         w = other.w;
         anchorx = other.anchorx;
         anchory = other.anchory;
-        color = new Color(other.color.getRed(), other.color.getGreen(), other.color.getBlue());
+        //color = new Color(other.color.getRed(), other.color.getGreen(), other.color.getBlue());
     }
 
     public int getW() {
@@ -51,17 +51,17 @@ public class Tile {
         return anchory;
     }
 
-    public Color getColor() {
+    /*public Color getColor() {
         return color;
-    }
+    }*/
 
     public void setNumber(int number) {
         this.number = number;
     }
 
-    public void setColor(Color color) {
+    /*public void setColor(Color color) {
         this.color = color;
-    }
+    }*/
 
     public int getNumber() {
         return number;

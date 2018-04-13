@@ -24,6 +24,13 @@ public class Main {
         mwin.setLocationRelativeTo(null);
         mwin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mwin.setVisible(true);
+        
+        /*int[] v = {0, 2, 2, 4, 4};
+        
+        GameMatrix.compressForward(v);
+        
+        for(int i = 0; i < v.length; ++i)
+            System.out.print(v[i]);*/
     }
     
 }

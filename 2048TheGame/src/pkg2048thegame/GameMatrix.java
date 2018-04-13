@@ -6,6 +6,7 @@
 package pkg2048thegame;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,6 +15,8 @@ import java.awt.Color;
 public class GameMatrix {
     
     private Tile[][] mat;
+    
+    private ArrayList<Integer> freeTiles;
     
     private int rows, cols;
     
@@ -63,5 +66,103 @@ public class GameMatrix {
     
     public Tile get(int i, int j) {
         return mat[i][j];
+    }
+    
+    // action utilities
+    
+    private static void shiftForward(Tile[] v, int start, int end) {
+        
+        for(int i = end; i > start; --i) {
+            v[i].setNumber(v[i-1].getNumber());
+        }
+        
+        v[start].setNumber(0);
+    }
+    
+    private void shiftBackwards(Tile[] v, int start, int end) {
+        
+        for(int i = start; i < end-1; ++i)
+            v[i].setNumber(v[i+1].getNumber());
+        
+        v[end-1].setNumber(0);
+    }
+    
+    // compresses with increasing indexes
+    public static void compressForward(Tile[] v) {
+        
+        int i;
+        
+        for(i = v.length - 1; i >= 0;) {
+            
+            if(v[i].getNumber() == v[i-1].getNumber()) {
+                v[i].setNumber(v[i].getNumber() * 2);
+                shiftForward(v, 0, i-1);
+            }
+            else
+                --i;
+        }
+    }
+    
+    // compresses with decreasing indexes
+    private void compressBackwards(Tile[] v) {
+        
+        int i;
+        
+        for(i = 0; i < v.length; ) {
+            
+            if(v[i].getNumber() == v[i+1].getNumber()) {
+                v[i].setNumber(v[i].getNumber() * 2);
+                shiftBackwards(v, i+1, mat.length-1);
+            }
+            else
+                ++i;
+        }
+    }
+    
+    // action movements
+    
+    public void swipeDown() {
+        
+        int i, j, k;
+        
+        for(j = 0; j < mat.length; ++j) {
+            for(i = 0; i < mat.length; ++i) {
+                if(mat[i][j].getNumber() == mat[i-1][j].getNumber()) {
+                    mat[i][j].setNumber(2 * mat[i][j].getNumber());
+                    // backshift
+                    for(k = i-1; k > 0; ) {
+                        mat[k][j].setNumber(mat[k-1][j].getNumber());
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    public void swipeUp() {
+        
+        
+    }
+    
+    public void swipeRight() {
+        
+        int i, j;
+        
+        for(i = 0; i < mat.length; ++i) {
+            for(j = 0; j < mat.length; ++j) {
+                compressForward(mat[i]);
+            }
+        }
+    }
+    
+    public void swipeLeft() {
+        
+        int i, j;
+        
+        for(i = 0; i < mat.length; ++i) {
+            for(j = 0; j < mat.length; ++j) {
+                compressBackwards(mat[i]);
+            }
+        }
     }
 }
