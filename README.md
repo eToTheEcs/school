@@ -1,2 +1,3 @@
 # school
-school things
+school stuff
+@Fermi MN 2017/2018
