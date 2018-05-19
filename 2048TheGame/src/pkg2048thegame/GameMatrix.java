@@ -6,7 +6,6 @@
 package pkg2048thegame;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 /**
  *
@@ -16,7 +15,7 @@ public class GameMatrix {
     
     private Tile[][] mat;
     
-    private ArrayList<Integer> freeTiles;
+    //private ArrayList<Integer> freeTiles;
     
     private int rows, cols;
     
@@ -88,7 +87,7 @@ public class GameMatrix {
     }
     
     // compresses with increasing indexes
-    public static void compressForward(Tile[] v) {
+    private void compressForward(Tile[] v) {
         
         int i;
         
@@ -123,46 +122,19 @@ public class GameMatrix {
     
     public void swipeDown() {
         
-        int i, j, k;
-        
-        for(j = 0; j < mat.length; ++j) {
-            for(i = 0; i < mat.length; ++i) {
-                if(mat[i][j].getNumber() == mat[i-1][j].getNumber()) {
-                    mat[i][j].setNumber(2 * mat[i][j].getNumber());
-                    // backshift
-                    for(k = i-1; k > 0; ) {
-                        mat[k][j].setNumber(mat[k-1][j].getNumber());
-                    }
-                }
-            }
-        }
         
     }
     
     public void swipeUp() {
         
-        
     }
     
     public void swipeRight() {
         
-        int i, j;
-        
-        for(i = 0; i < mat.length; ++i) {
-            for(j = 0; j < mat.length; ++j) {
-                compressForward(mat[i]);
-            }
-        }
     }
     
     public void swipeLeft() {
         
-        int i, j;
         
-        for(i = 0; i < mat.length; ++i) {
-            for(j = 0; j < mat.length; ++j) {
-                compressBackwards(mat[i]);
-            }
-        }
     }
 }

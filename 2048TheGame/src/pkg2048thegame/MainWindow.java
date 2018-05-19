@@ -7,6 +7,7 @@ package pkg2048thegame;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -52,7 +53,7 @@ public class MainWindow extends JFrame implements KeyListener {
         
         System.out.println("("+randomi+", "+randomj+")");
         
-        this.gm.get(randomi, randomj).setNumber(32);
+        this.gm.get(randomi, randomj).setNumber(2);
         
         this.addKeyListener(this);
     }
@@ -72,13 +73,16 @@ public class MainWindow extends JFrame implements KeyListener {
         
         for(i = 0; i < r; ++i) {
             for(j = 0; j < c; ++j) {
-                graphics.setColor(decideTileColor(gm.get(i, j).getNumber()));
-                graphics.fillRect(gm.get(i, j).getAnchorx(), gm.get(i, j).getAnchory(), gm.get(i, j).getW(), gm.get(i, j).getH());
+                Tile tile = gm.get(i, j);
+                graphics.setColor(decideTileColor(tile.getNumber()));
+                graphics.fillRect(tile.getAnchorx(), tile.getAnchory(), tile.getW(), tile.getH());
                 graphics.setColor(Color.BLACK);
-                graphics.drawRect(gm.get(i, j).getAnchorx(), gm.get(i, j).getAnchory(), gm.get(i, j).getW(), gm.get(i, j).getH());
-                if(gm.get(i, j).getNumber() != 0) {
-                    // TODO: set font...
-                    graphics.drawString(String.valueOf(gm.get(i, j).getNumber()), gm.get(i, j).getAnchorx(), gm.get(i, j).getAnchory());
+                graphics.drawRect(tile.getAnchorx(), tile.getAnchory(), tile.getW(), tile.getH());
+                if(tile.getNumber() != 0) {
+                    graphics.setFont(new Font("Ubuntu", Font.BOLD, 33));
+                    graphics.drawString(String.valueOf(tile.getNumber()), 
+                                          tile.getAnchorx() + tile.getW()/3, 
+                                          tile.getAnchory() + tile.getH()/2);
                 }
             }
         }
@@ -120,29 +124,30 @@ public class MainWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        // System.out.println("key " + ke.getKeyChar() + " pressed");
-        switch (ke.getKeyChar()) {
-            case 'w':
-                this.gm.swipeUp();
+        System.out.println("key " + ke.getKeyCode() + " pressed");
+       
+        switch (ke.getKeyCode()) {
+            case 38:
+                //this.gm.swipeUp();
                 break;
-            case 'a':
-                this.gm.swipeLeft();
+            case 37:
+                //this.gm.swipeLeft();
                 break;
-            case 's':
-                this.gm.swipeDown();
+            case 40:
+                //this.gm.swipeDown();
                 break;
-            case 'd':
-                this.gm.swipeRight();
+            case 39:
+                //this.gm.swipeRight();
                 break;
             default:
                 break;
         }
+        
+        this.repaint();
     }
 
     @Override
-    public void keyReleased(KeyEvent ke) {
-        System.out.println("key " + ke.getKeyText(w) + " released");
-    }
+    public void keyReleased(KeyEvent ke) {}
 
     @Override
     public void keyTyped(KeyEvent ke) {}
