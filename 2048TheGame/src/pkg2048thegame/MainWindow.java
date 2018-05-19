@@ -49,12 +49,6 @@ public class MainWindow extends JFrame implements KeyListener {
         
         this.gm = new GameMatrix(3, 3, 1, 1, tileH, tileW, INITIAL_COURT_COLOR);
         
-        int randomi = (int)(Math.random() * order), randomj = (int)(Math.random() * order);
-        
-        System.out.println("("+randomi+", "+randomj+")");
-        
-        this.gm.get(randomi, randomj).setNumber(2);
-        
         this.addKeyListener(this);
     }
 
@@ -74,10 +68,13 @@ public class MainWindow extends JFrame implements KeyListener {
         for(i = 0; i < r; ++i) {
             for(j = 0; j < c; ++j) {
                 Tile tile = gm.get(i, j);
+                
                 graphics.setColor(decideTileColor(tile.getNumber()));
                 graphics.fillRect(tile.getAnchorx(), tile.getAnchory(), tile.getW(), tile.getH());
+                
                 graphics.setColor(Color.BLACK);
                 graphics.drawRect(tile.getAnchorx(), tile.getAnchory(), tile.getW(), tile.getH());
+                
                 if(tile.getNumber() != 0) {
                     graphics.setFont(new Font("Ubuntu", Font.BOLD, 33));
                     graphics.drawString(String.valueOf(tile.getNumber()), 
@@ -134,7 +131,7 @@ public class MainWindow extends JFrame implements KeyListener {
                 //this.gm.swipeLeft();
                 break;
             case 40:
-                //this.gm.swipeDown();
+                this.gm.swipeDown();
                 break;
             case 39:
                 //this.gm.swipeRight();

@@ -67,5 +67,9 @@ public class Tile {
         return number;
     }
     
-    
+    public boolean isEmpty() {
+        
+        
+        return number == 0;
+    }
 }

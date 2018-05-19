@@ -19,6 +19,8 @@ public class GameMatrix {
     
     private int rows, cols;
     
+    private int spawnCoordx, spawnCoordy;   // coordinates of the last spawn 
+    
     public GameMatrix(int _rows, int _cols, int _startx, int _starty, int _tileH, int _tileW, Color _c) {
         
         rows = _rows;
@@ -39,6 +41,8 @@ public class GameMatrix {
             
             runnerAnchory += _tileH;
         }
+        
+        spawnTile();
     }
     
     public GameMatrix(GameMatrix other) {
@@ -67,54 +71,124 @@ public class GameMatrix {
         return mat[i][j];
     }
     
+    // returns if 2 tiles sum up at a power of 2
+    private boolean sumAtPow2(int tile1, int tile2) {
+        
+        return Integer.bitCount(tile1 + tile2) == 1;
+    }
+    
     // action utilities
     
-    private static void shiftForward(Tile[] v, int start, int end) {
+    // the following 2 functions return the actual tiles shifted (0 tiles are empty tiles)
+    
+    private int shiftForward(Tile[] v, int start, int end) {
+        
+        int ctr = 0;
         
         for(int i = end; i > start; --i) {
+            
+            if(v[i-1].getNumber() != 0)
+                ctr++;
+            
             v[i].setNumber(v[i-1].getNumber());
+            
         }
         
         v[start].setNumber(0);
+        
+        return ctr;
     }
     
-    private void shiftBackwards(Tile[] v, int start, int end) {
+    private int shiftBackwards(Tile[] v, int start, int end) {
         
-        for(int i = start; i < end-1; ++i)
+        int ctr = 0;
+        
+        for(int i = start; i < end; ++i) {
+            
+            if(v[i+1].getNumber() != 0)
+                ctr++;
+            
             v[i].setNumber(v[i+1].getNumber());
-        
-        v[end-1].setNumber(0);
-    }
-    
-    // compresses with increasing indexes
-    private void compressForward(Tile[] v) {
-        
-        int i;
-        
-        for(i = v.length - 1; i >= 0;) {
-            
-            if(v[i].getNumber() == v[i-1].getNumber()) {
-                v[i].setNumber(v[i].getNumber() * 2);
-                shiftForward(v, 0, i-1);
-            }
-            else
-                --i;
         }
+        
+        v[end].setNumber(0);
+        
+        return ctr;
     }
     
-    // compresses with decreasing indexes
-    private void compressBackwards(Tile[] v) {
+    // returns an array representing the matrix column
+    private Tile[] arrayFromCol(int col) {
         
-        int i;
+        Tile[] res = new Tile[rows];
         
-        for(i = 0; i < v.length; ) {
+        for(int i = 0; i < rows; ++i) {
+            res[i] = mat[i][col];   // shallow copy goes well
+        }
+        
+        return res;
+    }
+    
+    private void spawnTile() {
+        
+        spawnCoordx = (int)(Math.random() * cols);
+        spawnCoordy = (int)(Math.random() * rows);
+        
+        System.out.println("** tile spawned at coords:" + spawnCoordy + ", " + spawnCoordx);
+        
+        mat[spawnCoordy][spawnCoordx].setNumber(2);
+    }
+    
+    private void pack(int item, Direction dir) {
+        
+        int i, j;
+        
+        boolean pow2 = false, lastEmpty = false;
+        
+        switch(dir) {
             
-            if(v[i].getNumber() == v[i+1].getNumber()) {
-                v[i].setNumber(v[i].getNumber() * 2);
-                shiftBackwards(v, i+1, mat.length-1);
-            }
-            else
-                ++i;
+            case DOWN:
+                                
+                for(i = rows - 1; i > 0; ) {
+                    System.out.println("I'm at row " + i + ", col " + item);
+                    if(!lastEmpty && ((pow2 = sumAtPow2(mat[i][item].getNumber(), mat[i-1][item].getNumber())) || 
+                            (mat[i][item].isEmpty() || mat[i-1][item].isEmpty()))) {
+                        
+                        System.out.println("found matching tiles");
+                        
+                        Tile[] tmp = arrayFromCol(item);
+
+                        if(shiftForward(tmp, 0, i) == 0) {
+                            lastEmpty = true;
+                            System.out.println("no more tiles to shift");
+                        }
+                        
+                        if(pow2)
+                            mat[i][item].setNumber( mat[i][item].getNumber() * 2 );
+                    }
+                    else {
+                        --i;
+                        lastEmpty = false;
+                    }
+                }
+                
+                System.out.println("==============================================");
+                
+                break;
+                
+            case UP:
+                
+                break;
+                
+            case LEFT:
+                
+                break;
+                
+            case RIGHT:
+                
+                break;
+                
+            default:
+                break;
         }
     }
     
@@ -122,19 +196,24 @@ public class GameMatrix {
     
     public void swipeDown() {
         
+        pack(spawnCoordx, Direction.DOWN);
         
+        // generate spawn coordinates
+        spawnTile();
     }
     
     public void swipeUp() {
-        
+        pack(spawnCoordx, Direction.UP);
+        spawnTile();
     }
     
     public void swipeRight() {
-        
+        pack(spawnCoordy, Direction.RIGHT);
+        spawnTile();
     }
     
     public void swipeLeft() {
-        
-        
+        pack(spawnCoordy, Direction.LEFT);
+        spawnTile();
     }
 }

@@ -5,6 +5,7 @@
  */
 package pkg2048thegame;
 
+import java.util.Arrays;
 import javax.swing.JFrame;
 
 /**
@@ -25,12 +26,29 @@ public class Main {
         mwin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mwin.setVisible(true);
         
-        /*int[] v = {0, 2, 2, 4, 4};
         
-        GameMatrix.compressForward(v);
+        /*int[] v = {1, 2, 3, 4, 5, 6};
         
-        for(int i = 0; i < v.length; ++i)
-            System.out.print(v[i]);*/
+        shiftBackwards(v, 0, v.length-1);
+        
+        System.out.println(Arrays.toString(v));*/
     }
     
+    
+    /*public static void shiftForward(int[] v, int start, int end) {
+        
+        for(int i = end; i > start; --i) {
+            v[i] = v[i-1];
+        }
+        
+        v[start] = 0;
+    }
+    
+    public static void shiftBackwards(int[] v, int start, int end) {
+        
+        for(int i = start; i < end; ++i)
+            v[i] = v[i+1];
+        
+        v[end] = 0;
+    }*/
 }
