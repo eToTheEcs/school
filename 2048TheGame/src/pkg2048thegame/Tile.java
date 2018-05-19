@@ -11,7 +11,7 @@ import java.awt.Color;
  *
  * @author Nicolas Benatti
  */
-public class Tile {
+public class Tile implements Cloneable {
     
     private int w, h, anchorx, anchory, number;
     
@@ -71,5 +71,20 @@ public class Tile {
         
         
         return number == 0;
+    }
+    
+    @Override
+    public Object clone() {
+        
+        try {
+            
+            Tile cloned = (Tile)super.clone();
+            
+            return cloned;
+        }
+        catch(CloneNotSupportedException e) { 
+            System.out.println("you may implement the Cloneable interface for this object");
+            return null;
+        }
     }
 }

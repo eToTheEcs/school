@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- * this class applies singleton design pattern
+ * this class follows singleton design pattern
  * @author Nicolas Benatti
  */
 public class MainWindow extends JFrame implements KeyListener {
@@ -118,29 +118,35 @@ public class MainWindow extends JFrame implements KeyListener {
                 return Color.black;
         }
     }
-
+    
+    private boolean isArrowKey(int keyCode) {
+        
+        return keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40;
+    }
+    
     @Override
     public void keyPressed(KeyEvent ke) {
         System.out.println("key " + ke.getKeyCode() + " pressed");
        
         switch (ke.getKeyCode()) {
             case 38:
-                //this.gm.swipeUp();
+                this.gm.swipeUp();
                 break;
             case 37:
-                //this.gm.swipeLeft();
+                this.gm.swipeLeft();
                 break;
             case 40:
                 this.gm.swipeDown();
                 break;
             case 39:
-                //this.gm.swipeRight();
+                this.gm.swipeRight();
                 break;
             default:
                 break;
         }
         
-        this.repaint();
+        if(isArrowKey(ke.getKeyCode()))
+            this.repaint();
     }
 
     @Override
