@@ -84,6 +84,17 @@ public class MainWindow extends JFrame implements KeyListener {
                 }
             }
         }
+        
+        if(playerWins()) {
+            super.paint(graphics); // the default behavior of this method is to paint an empty screen
+            
+            graphics.drawString("YOU WIN", 200, 200);
+            
+            try {
+                Thread.sleep(5000);
+            }
+            catch(InterruptedException e) { System.out.println(e); }
+        }
     }
     
     private Color decideTileColor(int tileValue) {
@@ -118,6 +129,20 @@ public class MainWindow extends JFrame implements KeyListener {
             default:
                 return Color.black;
         }
+    }
+    
+    
+    private boolean playerWins() {
+        
+        for(int i = 0; i < gm.getRows(); ++i) {
+            for(int j = 0; j < gm.getCols(); ++j) {
+                
+                if(gm.get(i, j).getNumber() == 2048)
+                    return true;
+            }
+        }
+        
+        return false;
     }
     
     private boolean isArrowKey(int keyCode) {
